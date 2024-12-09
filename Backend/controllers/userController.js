@@ -163,6 +163,9 @@ exports.getExpenses = async (req,res) => {
                 }
             ]
             
+        }).populate({
+            path : 'groupId',
+            select : 'name'
         })
         return res.json(expenses)
     } catch(error){

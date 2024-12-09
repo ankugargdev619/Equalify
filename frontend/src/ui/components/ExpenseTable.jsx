@@ -1,9 +1,10 @@
 
 export const ExpenseTable = (props) => {
-    const expenseData = props.expenseData;
-    const totalAmount = expenseData.reduce((sum, item) => sum + item.amount, 0);
+    const expenseData = props?.expenseData;
+    const totalAmount = expenseData?.reduce((sum, item) => sum + item.amount, 0);
     return <>
-        <table className="table-auto border-collapse border w-full">
+        <div className="text-4xl font-bold mb-10">Recent Expenses</div>
+        {expenseData ? <table className="table-auto border-collapse border w-full">
                     <thead  className="text-lg md:text-xl">
                         <tr>
                         {Object.keys(expenseData[0]).map((key,idx) => (
@@ -33,6 +34,8 @@ export const ExpenseTable = (props) => {
                             }).format(totalAmount)}</td>
                         </tr>
                     </tfoot>
-                </table>
+                </table> : 
+                <div className="text-lg md:text-xl">No expenses yet!</div>
+            }
     </>
 }

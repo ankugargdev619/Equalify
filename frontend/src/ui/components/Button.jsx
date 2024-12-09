@@ -1,7 +1,7 @@
 import React from "react"
 const defaultStyles = 'flex items-center justify-center border-2 my-4'
 const sizeStyle = {
-    'sm' : 'py-2 px-4 gap-2 rounded-md w-24 sm:w-48 lg:w-60',
+    'sm' : 'py-2 px-2 gap-2 rounded-md w-24 sm:w-48 lg:w-60',
     'md' : 'py-2 px-6 gap-4 rounded-md w-36 sm:w-60 lg:w-80',
     'lg' : 'py-2 px-8 gap-6 rounded-lg w-60 sm:w-80 lg:w-96'
 }
