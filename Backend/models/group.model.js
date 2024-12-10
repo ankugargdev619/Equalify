@@ -9,6 +9,10 @@ const groupSchema = new Schema({
         type: String,
         required: true
     },
+    description : {
+        type : String,
+        required : true
+    },
     members : [{
         type: mongoose.Schema.Types.ObjectId,
         ref: User,

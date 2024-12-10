@@ -13,10 +13,10 @@ export const GroupCard = (props) => {
                 </div>
                 <div className="flex gap-2 items-center">
                     <GroupIcon size="sm" />
-                    <div className="text-sm text-brand-700">{props.members} members</div>
+                    <div className="text-sm text-brand-700">{props.members}</div>
                 </div>
             </div>
-            <div className="text-brand-800 text-sm">{props.description}</div>
+            <div className="text-brand-800 text-sm h-10 overflow-hidden">{props.description}</div>
             <div className="font-bold absolute bottom-2">Total Spendings : {Intl.NumberFormat("en-IN", {
                             style: "currency",
                             currency: "INR",
