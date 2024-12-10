@@ -8,32 +8,86 @@ import { Modal } from "../components/Modal";
 import { Input } from "../components/Input";
 import { GroupIcon } from "../icons/GroupIcon";
 import { ContentWrapper } from "../components/ContentWrapper";
+import { AddGroupCard } from "../components/AddGroupCard";
+import {GROUP_LIST} from "../../config/serverConfig";
+import axios from "axios";
 
 const gernericStyles = "px-10 md:px-16 lg:px-28 py-10";
 
-export const GroupPage = (props) => {
-    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-    const [isModalVisible,setModalVisible] = useState(false);
-    useEffect(() => {
-        const handleResize = () => setIsMobile(window.innerWidth < 768);
-        window.addEventListener('resize', handleResize);
+const headers = {
+    headers: {
+        token : window.sessionStorage.getItem("token")
+    }
+}
 
-        return () => window.removeEventListener('resize', handleResize);
+const groupList = [
+    {
+      name : "Roomies",
+      description : "Friends from hostel room who are working together",
+      members : 3,
+      spending : 1506
+    },
+    {
+      name : "Homies",
+      description : "Friends from home",
+      members : 5,
+      spending : 2195
+    },
+    {
+      name : "SSB",
+      description : "Friends from interview",
+      members : 6,
+      spending : 5461
+    },
+    {
+      name : "SSB",
+      description : "Friends from interview",
+      members : 6,
+      spending : 5461
+    },
+    {
+      name : "SSB",
+      description : "Friends from interview",
+      members : 6,
+      spending : 5461
+    },
+  ]
+
+export const GroupPage = (props) => {
+    const [isModalVisible,setModalVisible] = useState(false);
+    const [groupList,setGroupList] = useState([]);
+    useEffect(() => {
+        getGroupDetails();
     }, []);
 
-    const createGroupLabel = isMobile ? "" : "Create Group"
+    const getGroupDetails = async () => {
+        try {
+            const groupsRes = await axios.get(GROUP_LIST,headers);
+            const cleanGroups = groupsRes.data.groupWithExpenses.map((element)=>{
+                return {
+                    name : element.name,
+                    description : element.description,
+                    members : element.members.length,
+                    spending : element.spending
+                }
+            })
+            setGroupList(cleanGroups);
+        } catch(e){
+            console.error(e);
+        }
+    }
 
     return <div className="relative">
             <div className="flex justify-between align-middle flex-wrap">
                 <div className="text-4xl font-bold flex items-center">My Groups</div>
-                <Button size="sm" label={createGroupLabel} onClick={()=>{setModalVisible(true)}} endIcon={<AddIcon />} />
             </div>
             <div className="my-10 flex gap-4 flex-wrap">
-                {props.groupList.map((group,idx) => (
+                {groupList.map((group,idx) => (
                     <div key={idx}>
                         <GroupCard name={group.name} description={group.description} members={group.members} spending={group.spending} />
                     </div>
                 ))}
+                <AddGroupCard onClick={()=>{setModalVisible(true)}} icon={<AddIcon />} />
             </div>
         {isModalVisible ? 
         <Modal className={gernericStyles} isModalVisible={isModalVisible} setModalVisible={setModalVisible}>

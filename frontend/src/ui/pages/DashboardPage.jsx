@@ -58,7 +58,7 @@ export const DashboardPage = () => {
             setRecentExpenses(recentExpenses);
             setSpending(totalSpending);
             setName(profile.data.name);
-            setGroupCount(groupList.data.groups.length);
+            setGroupCount(groupList.data.groupWithExpenses.length);
         } catch(e) {
             console.log(e);
         }

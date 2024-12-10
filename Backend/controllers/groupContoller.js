@@ -6,12 +6,13 @@ const { ObjectId } = mongoose.Types;
 
 // Create Group
 exports.createGroup = async (req,res)=>{
-    const {name} = req.body;
+    const {name,description} = req.body;
     const members = [req.id];
     try{
         // Create Group
         const group = await Group.create({
             name,
+            description,
             members
         });
 
@@ -20,7 +21,7 @@ exports.createGroup = async (req,res)=>{
         })
         
     } catch(error){
-        console.log(error);
+        console.error(error);
         return res.status(400).json({
             error : "Error creating group!"
         })
@@ -39,8 +40,18 @@ exports.listGroups = async (req,res) => {
         }) // Populate the data of the object
         .select('-createdAt -updatedAt -__v'); // Given fields will not populate "-" indicates negation
 
+        const groupWithExpenses = await Promise.all(
+            groups.map(async(group) => {
+                const expenses = await Expense.find({groupId : group._id});
+                return {
+                    ...group.toObject(),
+                    spending : expenses.reduce((total,item)=> total + item.amount,0)
+                };
+            })
+        );
+
         return res.status(200).json({
-            groups
+            groupWithExpenses
         })
     } catch(error){
         console.log(error);
@@ -71,14 +82,20 @@ exports.getGroup = async (req,res) => {
 // Update name of group
 exports.updateGroup = async (req,res) => {
     const {groupId} = req.params;
-    const {name} = req.body;
+    const {name,description} = req.body;
+    const updateParams = {};
+    if(name){
+        updateParams.name = name;
+    }
+
+    if(description){
+        updateParams.description = description;
+    }
 
     try{
         const group = await Group.findByIdAndUpdate(
             groupId,
-            {"$set":{
-                name
-            }},
+            {"$set":updateParams},
             {new : true} // Will return updated document in response
         ).populate({
             path : 'members',
